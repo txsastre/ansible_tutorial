@@ -4,16 +4,36 @@
   become: true
   tasks:
 
-  - name: update repository index
+  - name: update repository index if Virtualbox and Debian
     apt:
       update_cache: yes
+    when: ansible_virtualization_type == "virtualbox" and ansible_distribution == "Debian"
 
-  - name: install apache2 package
+  - name: install apache2 package if Virtualbox and Debian
     apt:
       name: apache2
       state: latest
+    when: ansible_virtualization_type == "virtualbox" and ansible_distribution == "Debian"
 
-  - name: add php support for apache
+  - name: add php support for apache if Virtualbox and Debian
     apt:
       name: libapache2-mod-php
       state: latest
+    when: ansible_virtualization_type == "virtualbox" and ansible_distribution == "Debian"
+
+  - name: update repository index if Virtualbox and CentOS
+    dnf:
+      update_cache: yes
+    when: ansible_virtualization_type == "virtualbox" and ansible_distribution == "CentOS"
+
+  - name: install apache2 package if Virtualbox and CentOS
+    dnf:
+      name: httpd
+      state: latest
+    when: ansible_virtualization_type == "virtualbox" and ansible_distribution == "CentOS"
+
+  - name: add php support for apache if Virtualbox and CentOS
+    dnf:
+      name: php
+      state: latest
+    when: ansible_virtualization_type == "virtualbox" and ansible_distribution == "CentOS"
