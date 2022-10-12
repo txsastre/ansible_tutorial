@@ -1,0 +1,4 @@
+192.168.70.51 apache_package=apache2 php_package=libapache2-mod-php
+192.168.70.57 apache_package=apache2 php_package=libapache2-mod-php
+192.168.70.58 apache_package=apache2 php_package=libapache2-mod-php
+192.168.70.52 apache_package=httpd   php_package=php

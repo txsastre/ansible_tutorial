@@ -1,0 +1,65 @@
+---
+
+- hosts: all
+  become: true
+  pre_tasks:
+
+  - name: install updates (Rocky)
+    dnf:
+      update_only: yes
+      update_cache: yes
+    when: ansible_distribution == "Rocky"
+
+  - name: install updates (Debian)
+    apt:
+      upgrade: dist
+      update_cache: yes
+    when: ansible_distribution == "Debian"
+
+
+- hosts: web_servers
+  become: true
+  tasks:
+
+  - name: install apache and php for Debian servers
+    apt:
+      name:
+        - apache2
+        - libapache2-mod-php
+      state: latest
+    when: ansible_virtualization_type == "virtualbox" and ansible_distribution == "Debian"
+
+  - name: install apache and php for Rocky servers
+    dnf:
+      name: 
+        - httpd
+        - php
+      state: latest
+    when: ansible_virtualization_type == "virtualbox" and ansible_distribution == "Rocky"
+
+- hosts: db_servers
+  become: true
+  tasks:
+
+  - name: install mariadb package (Rocky)
+    dnf:
+      name: mariadb
+      state: latest
+    when: ansible_distribution == "Rocky"
+
+  - name: install mariadb package (Debian)
+    apt:
+      name: mariadb-server
+      state: latest
+    when: ansible_distribution == "Debian"
+
+- hosts: file_servers
+  become: true
+  tasks:
+
+    - name : install samba package
+      package:
+        name : samba
+        state : latest
+
+
