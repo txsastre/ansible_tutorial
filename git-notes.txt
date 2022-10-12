@@ -2,3 +2,5 @@ git status
 git add .   # afegeix tots els docs.
 git commit -m "explicació del que hem afegit"
 git push 
+
+vs-code  lear git
