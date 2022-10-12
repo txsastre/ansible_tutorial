@@ -5,12 +5,14 @@
   pre_tasks:
 
   - name: install updates (Rocky)
+    tags: always
     dnf:
       update_only: yes
       update_cache: yes
     when: ansible_distribution == "Rocky"
 
   - name: install updates (Debian)
+    tags: always
     apt:
       upgrade: dist
       update_cache: yes
@@ -22,6 +24,7 @@
   tasks:
 
   - name: install apache and php for Debian servers
+    tags: apache,apache2,ubuntu,debian
     apt:
       name:
         - apache2
@@ -30,6 +33,7 @@
     when: ansible_virtualization_type == "virtualbox" and ansible_distribution == "Debian"
 
   - name: install apache and php for Rocky servers
+    tags: apache,httpd,rocky
     dnf:
       name: 
         - httpd
@@ -42,6 +46,7 @@
   tasks:
 
   - name: install mariadb package (Rocky)
+    tags: mariadb,db,rocky,debian
     dnf:
       name: mariadb
       state: latest
@@ -58,6 +63,7 @@
   tasks:
 
     - name : install samba package
+      tags: samba
       package:
         name : samba
         state : latest
