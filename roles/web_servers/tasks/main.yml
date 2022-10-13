@@ -1,47 +1,31 @@
-- name: install apache and php for Debian servers
-  tags: apache,apache2,ubuntu,debian
-  apt:
+- name: install web server packages
+  tags: apache,apache2,centos,httpd,ubuntu
+  package:
     name:
-      - apache2
-      - libapache2-mod-php
+      - "{{ apache_package_name }}"
+      - "{{ php_package_name }}"
     state: latest
-  when: ansible_virtualization_type == "virtualbox" and ansible_distribution == "Debian"
 
-- name: install apache and php for Rocky servers
-  tags: apache,httpd,rocky
-  dnf:
-    name: 
-      - httpd
-      - php
-    state: latest
-  when: ansible_virtualization_type == "virtualbox" and ansible_distribution == "Rocky"
-
-- name: start httpd (Rocky)
-  tags: apache, rocky, centos, httpd
+- name: start and enable apache
+  tags: apache,centos,httpd
   service:
-    name: httpd
+    name: "{{ apache_service }}"
     state: started
     enabled: yes
-  when: ansible_virtualization_type == "virtualbox" and ansible_distribution == "Rocky"
+  when: ansible_distribution == "Rocky"
 
-- name: change email address for admin
-  tags: apache, centos, httpd, rocky
-  lineinfile: 
+
+- name: change e-mail address for admin
+  tags: apache,centos,httpd
+  lineinfile:
     path: /etc/httpd/conf/httpd.conf
     regexp: '^ServerAdmin'
-    line: ServerAdmin somebody@somewhere.net
+    line: ServerAdmin somebody@somewhere.com
   when: ansible_distribution == "Rocky"
-  register: httpd_var
+  notify: restart_apache
 
-- name: restart httpd (Rocky)
-  tags: apache, centos, rocky, httpd
-  service:
-    name: httpd
-    state: restarted
-  when: httpd_var.changed
-
-- name: copy default html file for site
-  tags: apache, apache2, httpd
+- name: copy html file for site
+  tags: apache,apache,apache2,httpd
   copy:
     src: default_site.html
     dest: /var/www/html/index.html
