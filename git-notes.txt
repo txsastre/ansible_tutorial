@@ -4,3 +4,4 @@ git commit -m "explicació del que hem afegit"
 git push 
 
 vs-code  lear git
+# test line
